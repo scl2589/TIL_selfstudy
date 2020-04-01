@@ -1783,3 +1783,689 @@
   - 서로 연관되어있는 데이터와 어떠한 처리 (함수)를 하나의 그릇 안에 모아서 그룹핑 해서 모아놓은 것이 객체지향프로그래밍이라고 한다.
     - grades안에 list와 show가 있다.
 
+
+
+## 유효범위
+
+- 유효범위: 변수의 수명을 의미한다
+
+- 범위: 함수 안쪽에 정의된 변수 (지역변수 local variable) → 함수 바깥쪽에 정의된 변수 (전역변수global variable)
+
+- 예제 
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        alert(vscope);
+    }
+    fscope(); //global 출력
+    ```
+
+    - fscope이라는 함수는 함수 바깥쪽에 있는 변수 vscope 에 접근 가능
+
+      <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        var vscope = 'local'; //함수 안에서만 접근 가능
+        alert(vscope);
+    }
+    fscope(); //local 출력
+    ```
+
+    - 함수 내에서 정의된 변수를 정의한다.
+
+      <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        alert(vscope);
+    }
+    function fscope2(){
+        alert(vscope);
+    }
+    fscope(); //global
+    fscope2(); //global
+    ```
+
+  - <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        var vscope = 'local';
+        var lv = 'local variables';
+        alert(lv); //local variables
+    }
+    fscope();
+    alert(lv); //undefined
+    ```
+
+    - lv는 지역변수이고, 함수 내에서만 접근 가능하기 때문에, 바깥쪽에서 lv 라고 하면, undefined라고 실행
+
+      <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        var vscope = 'local';
+    }
+    fscope();
+    alert(vscope); //global
+    ```
+
+    - global인 이유는 var이라는 키워드를 사용해서 local변수를 만드는 것이다.
+
+      <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        vscope = 'local';
+    }
+    fscope();
+    alert(vscope); //local
+    ```
+
+    - local인 이유는, 전역변수인 vscope을 변경하게 된 것이기 때문이다.
+
+      <br>
+
+  - ```javascript
+    var vscope = 'global';
+    function fscope(){
+        var vscope = 'local';
+        alert('함수안 '+vscope); //local
+    }
+    fscope();
+    alert('함수밖 '+vscope); //global
+    ```
+
+<br>
+
+### 유효범위의 필요성
+
+- 예시
+
+  - ```javascript
+    function a (){
+        var i = 0;
+    }
+    for(var i = 0; i < 5; i++){
+        a();
+        document.write(i);
+    }
+    //1234
+    ```
+
+    <br>
+
+  - ```javascript
+    function a (){
+        i = 0;
+    }
+    for(var i = 0; i < 5; i++){
+        a();
+        document.write(i);
+    }
+    //무한 반복!!
+    ```
+
+    - for문에  var i의 i는 전역변수가 된것이고, function a에서 i에 var을 없앴기 때문에 전역변수를 0으로 만들어주는 것과 같다. i를 지속적으로 0으로 만들어줬기 때문에 **무한반복이 발생**한다.
+
+<br>
+
+### 전역변수의 사용
+
+- 불가피하게 전역변수를 사용해야 하는 경우는 하나의 객체를 전역변수로 만들고 객체의 속성으로 변수를 관리하는 방법을 사용한다.
+
+- 코드
+
+  - ```javascript
+    MYAPP = {}
+    MYAPP.calculator = {
+        'left' : null,
+        'right' : null
+    }
+    MYAPP.coordinate = {
+        'left' : null,
+        'right' : null
+    }
+     
+    MYAPP.calculator.left = 10;
+    MYAPP.calculator.right = 20;
+    function sum(){
+        return MYAPP.calculator.left + MYAPP.calculator.right;
+    }
+    document.write(sum()); //30
+    ```
+
+    - MYAPP이라는 변수를 만들었고, 객체이다. 그리고 전역변수이다.
+    - Calculator속성의 값으로 다시 객체가 온다.  (left, right로)
+    - calculator와 coordinate의 속성 안에  left와 right는 스펠링이 같지만 다른 것이다.
+
+    <br>
+
+  - ```javascript
+    (function(){
+        var MYAPP = {}
+        MYAPP.calculator = {
+            'left' : null,
+            'right' : null
+        }
+        MYAPP.coordinate = {
+            'left' : null,
+            'right' : null
+        }
+        MYAPP.calculator.left = 10;
+        MYAPP.calculator.right = 20;
+        function sum(){
+            return MYAPP.calculator.left + MYAPP.calculator.right;
+        }
+        document.write(sum());
+    }())
+    ```
+
+    - MYAPP은 함수 안의 지역변수가 되었다.
+    - **익명함수**
+      - 전역변수가 전혀 존재하지 않는 코드이다.
+
+  
+
+  <br>
+
+### 유효범위의 대상 (함수)
+
+- 자바스크립트는 함수에 대한 유효범위만을 제공한다.
+
+- 많은 언어들이 블록({})에 대한 유효범위를 제공하는 것과 다른 점이다.
+
+- 코드
+
+  - ```javascript
+    for(var i = 0; i < 1; i++){
+        var name = 'coding everybody';
+    }
+    alert(name); //coding everybody
+    ```
+    - for문의 중괄호 안에서 선언되어도 이 중괄호 안에서만 허용되는 변수가 아니고, 바깥에서도 허용이 가능하다. 지역변수로서의 의미를 갖지 않는다.
+
+<br>
+
+### 정적 유효 범위
+
+- 자바스크립트는 함수가 선언된 시점에서의 유효범위를 갖는다.
+
+- 이러한 유효범위의 방식을 정적 유효범위 (static scoping) 혹은 레시컬 (lexical scoping)이라고 한다.
+
+- 코드
+
+  - ```javascript
+    var i = 5;
+     
+    function a(){
+        var i = 10;
+        b();
+    }
+     
+    function b(){
+        document.write(i); //i의 전역변수가 사용된다
+    }
+     
+    a(); //5
+    ```
+
+    - **정적 유효범위/어휘적 유효범위:** 사용될 때가 아니고 정의될 때의 전역변수가 사용된다.
+
+<br>
+
+## 값으로서의 함수와 콜백
+
+### 함수의 용도 1
+
+-  JavaScript에서는 함수도 객체이다.
+
+- 다른 언어와 다른 점: 함수가 값이 될 수 있다는 점이다.
+
+- 예제 (아래는 함수이다)
+
+  - ```javascript
+    function a(){}
+    ```
+
+  - ```javascript
+    var a = function() {}
+    ```
+
+    - 위와 같다.
+    - 함수가 값이기 때문에 이렇게 선언할 수 있는 것이다.
+
+#### 메소드
+
+- **메소드**: 객체의 속성 값으로 담겨진 함수
+
+- 예시
+
+  - ```javascript
+    a = {
+        b:function(){
+        }
+    };
+    ```
+
+    - **객체 안에 정의된 함수는 메소드이다**. 
+    - b: key, function(): value 
+    - key가 어떠한 값을 저장하는데, 그말은 key가 변수와 같은 역할을 하는 것이고, 즉 **속성, property**이다.
+
+#### 함수는 다른 함수의 인자로 전달 될 수도 있다.
+
+ -  예제
+
+     -  ```javascript
+        function cal(func, num){
+            return func(num)
+        }
+        function increase(num){
+            return num+1
+        }
+        function decrease(num){
+            return num-1
+        }
+        alert(cal(increase, 1));
+        alert(cal(decrease, 1));
+        ```
+
+        - increase와 decrease 함수가 cal 함수의 인자로 전달되고 있다.
+
+<br>
+
+### 함수의 용도 2
+
+- 함수는 함수의 리턴 값으로도 사용될 수 있다.
+
+- 예시
+
+  - ```javascript
+    function cal(mode){
+        var funcs = {
+            'plus' : function(left, right){return left + right},
+            'minus' : function(left, right){return left - right}
+        }
+        return funcs[mode];
+    }
+    alert(cal('plus')(2,1)); //3
+    alert(cal('minus')(2,1)); //1
+    ```
+
+- 함수는 배열의 값으로도 사용될 수 있다.
+
+- 예시
+
+  - ```javascript
+    var process = [
+        function(input){ return input + 10;},
+        function(input){ return input * input;},
+        function(input){ return input / 2;}
+    ];
+    var input = 1;
+    for(var i = 0; i < process.length; i++){
+        input = process[i](input);
+    }
+    alert(input);
+    ```
+
+    - i의 값이 0일 때, process안의 첫번째 원소 (function)인 return input + 10에 들어가 input이 1이 되어서 return 값이 11이 됨
+    - i의 값이 1일 때, process안의 두번째 원소 (function)인 return input * input에 들어가 input이 11이 되어서 return 값이 121이 됨
+    - i의 값이 2일 때, process안의 세번째 원소 (function)인 return input / 2에 들어가 input이 121이 되어서 return 값이 60.5가 됨
+
+- **first-class citizen**: 변수, 함수의 매개변수, 리턴값 용도로 사용할 수 있는 데이터를, 프로그래밍에서는 first class citizen/object 라고 한다.
+
+<br>
+
+### 콜백
+
+- **콜백**: 어떠한 함수가 수신하는 인자가 함수인 경우를 콜백이라 한다.
+
+#### 처리의 위임
+
+- 값으로 사용될 수 있는 특성을 이용하면 함수의 인자로 전달할 수 있다.
+
+- 값으로 전달된 함수는 호출될 수 있기 때문에 이를 이용하면 함수의 동작을 완전히 바꿀 수 있다.
+
+- 인자로 전달된 함수 sortNumber의 구현에 따라서 sort의 동작방법이 완전히 바뀌게 된다.
+
+- sort의 문제점
+
+  - ```javascript
+    var numbers = [20, 10, 9,8,7,6,5,4,3,2,1];
+    console.log(numbers.sort());
+    //[1, 10, 2, 20, 3, 4, 5, 6, 7, 8, 9]
+    ```
+    - 원하는 대로 정렬이 되지 않는다.
+
+- sort는 인자로 function을 받을 수 있다.
+
+  - ```javascript
+    var numbers = [20, 10, 9,8,7,6,5,4,3,2,1];
+    var sortfunc = function(a, b){
+        console.log(a, b)
+    }
+    console.log(numbers.sort(sortfunc));
+    /*
+    10 20
+    9 10
+    8 9
+    7 8
+    6 7
+    5 6
+    4 5
+    3 4
+    2 3
+    1 2
+    (11) [20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    */
+    ```
+    - sort라는 값을 호출될 때 계속 값들을 비교하면서, 작은 것들을 앞으로 보내면서 값을 전달.
+
+  - ```javascript
+    var numbers = [20, 10, 9,8,7,6,5,4,3,2,1];
+    var sortfunc = function(a, b){
+        console.log(a, b)
+        if(a>b){
+            return 1;
+        }else if (a<b){
+            return -1;
+        } else{
+            return 0;
+        }
+    }
+    console.log(numbers.sort(sortfunc));
+    /*
+    10 20
+    9 10
+    8 9
+    7 8
+    6 7
+    5 6
+    4 5
+    3 4
+    2 3
+    1 2
+    (11) [20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    */
+    ```
+
+  - ```javascript
+    function sortNumber(a,b){
+        // 위의 예제와 비교해서 a와 b의 순서를 바꾸면 정렬순서가 반대가 된다.
+        return b-a;
+    }
+    var numbers = [20, 10, 9,8,7,6,5,4,3,2,1];
+    alert(numbers.sort(sortNumber)); //numbers는 배열 객체 sort는 메소드
+    // array,  [20,10,9,8,7,6,5,4,3,2,1]
+    ```
+
+  - ```javascript
+    var numbers = [20, 10, 9,8,7,6,5,4,3,2,1];
+    var sortfunc = function(a, b){
+        return b-a;
+    }
+    console.log(numbers.sort(sortfunc)); //sortfunc가 콜백함수를 말한다.
+    ```
+
+    - 콜백함수라는 것은 콜백함수를 수신 받는 메소드 sort가 콜백함수의 내용을 인자로 전달받아, 내부적으로 호출하는 것을 통해서, sort라는 함수가 동작하는 기본적인 동작법을 변경할 수 있게 된 것이다.
+
+<br>
+
+### 비동기콜백
+
+- 콜백은 비동기처리에서도 유용하게 사용된다.
+
+- 시간이 오래걸리는 작업이 있을 때 이 작업이 완료된 후에 처리해야 할 일을 콜백으로 지정하면 해당 작업이 끝났을 때 미리 등록한 작업을 실행하도록 할 수 있다.
+
+- ajax: asynchronous (비동기) javascript and XML
+
+- 다음 코드는 일반적인 환경에서는 작동하지 않고 서버 환경에서만 동작한다.
+
+  - datasource.json.js
+
+    - ```javascript
+      {"title":"JavaScript","author":"egoing"}
+      ```
+
+      
+
+  - demo1.html
+
+    - ```html
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+      </head>
+      <body>
+      <script type="text/javascript">
+          $.get('./datasource.json.js', function(result){
+              console.log(result);
+          }, 'json');
+      </script>
+      </body>
+      </html>
+      ```
+
+      - $는 jquery의 특수한 객체
+
+
+
+
+
+## 클로저
+
+- 클로저(closure)는 내부함수와 외부함수의 맥락(context)에 접근할 수 있는 것을 가르킨다.
+
+### 외부함수와 내부함수
+
+#### 내부함수
+
+- ```javascript
+  function outer(){ //외부함수이다.
+      //inner는 outer함수 안에서만 사용된다
+      function inner(){ //var inner= function{} 내부함수이다.
+          var title = 'coding everybody'; 
+          alert(title);
+      }
+      inner();
+  }
+  outer();
+  ```
+  - 함수 inner를 내부 함수라고 한다.
+
+<br>
+
+- ```javascript
+  function outer(){
+      var title = 'coding everybody';  
+      function inner(){        
+          alert(title);
+      }
+      inner();
+  }
+  outer();
+  ```
+  - 내부함수에서 외부함수에 있는 지역변수인 title에 접근할 수 있다. 이를 클로저라 한다.
+
+<br>
+
+### 클로저란?
+
+- 내부함수와 밀접한 관계를 가지고 있다.
+
+- 내부함수는 외부함수의 지역변수에 접근할 수 있는데 외부함수의 실행이 끝나서 외부함수가 소멸된 이후에도 내부함수가 외부함수의 변수에 접근할 수 있다.
+
+- 예제
+
+  - ```javascript
+    function outer(){
+        var title = 'coding everybody';  
+        return function(){        
+            alert(title);
+        }
+    }
+    inner = outer();
+    inner();
+    ```
+
+    - return했음에도, 외부함수는 죽었는데 inner를 통해 호출이 되어도 외부함수에 있는 변수에 접근이 가능하다.
+
+<br>
+
+### Private Variable
+
+- software가 커지는 과정에서, 어떤 정보가 있을 때 아무나 사용하는 것을 방지하는 것이다.
+
+- 예제
+
+  - ```javascript
+    function factory_movie(title){
+        return {
+            get_title : function (){
+                return title;
+            },
+            set_title : function(_title){
+                title = _title
+            }
+        }
+    }
+    ghost = factory_movie('Ghost in the shell');
+    matrix = factory_movie('Matrix');
+     
+    alert(ghost.get_title()); //Ghost in the shell
+    alert(matrix.get_title()); //Matrix
+    
+     
+    ghost.set_title('공각기동대');
+     
+    alert(ghost.get_title()); //공각기동대
+    alert(matrix.get_title());//Matrix
+    ```
+
+1. 클로저는 객체의 메소드에서도 사용할 수 있다. 위의 예제는 함수의 리턴값으로 객체를 반환하고 있다. 이 객체는 메소드 get_title과 set_title을 가지고 있다. 이 메소드들은 외부함수인 factory_movie의 인자값으로 전달된 지역변수 title을 사용하고 있다.
+
+2. 동일한 외부함수 안에서 만들어진 내부함수나 메소드는 외부함수의 지역변수를 공유한다. 17행에서 실행된 set_title은 외부함수 factory_movie의 지역변수 title의 값을 '공각기동대'로 변경했다. 19행에서 ghost.get_title();의 값이 '공각기동대'인 것은 set_title와 get_title 함수가 title의 값을 공유하고 있다는 의미다.
+
+3. 그런데 똑같은 외부함수 factory_movie를 공유하고 있는 ghost와 matrix의 get_title의 결과는 서로 각각 다르다. 그것은 외부함수가 실행될 때마다 새로운 지역변수를 포함하는 클로저가 생성되기 때문에 ghost와 matrix는 서로 완전히 독립된 객체가 된다.
+
+4. factory_movie의 지역변수 title은 2행에서 정의된 객체의 메소드에서만 접근 할 수 있는 값이다. 이 말은 title의 값을 읽고 수정 할 수 있는 것은 factory_movie 메소드를 통해서 만들어진 객체 뿐이라는 의미다. JavaScript는 기본적으로 Private한 속성을 지원하지 않는데, 클로저의 이러한 특성을 이용해서 Private한 속성을 사용할 수 있게된다.
+
+- 예제 (타이틀을 숫자로 넣을 때 문자열을 넣어야 한다고 경고창 띄워주기)
+
+  - ```javascript
+    function factory_movie(title){
+        return {
+            get_title : function (){
+                return title;
+            },
+            set_title : function(_title){
+                if(typeof _title==='String'){
+                    title = _title
+                }else{
+                    alert('제목은 문자열이어야 합니다.')
+                }
+                
+            }
+        }
+    }
+    ghost = factory_movie('Ghost in the shell');
+    matrix = factory_movie('Matrix');
+     
+    alert(ghost.get_title()); //Ghost in the shell
+    alert(matrix.get_title()); //Matrix
+    
+     
+    ghost.set_title('공각기동대');
+    matrix.set_title(1);
+    alert(ghost.get_title()); //공각기동대
+    alert(matrix.get_title());//Matrix
+    ```
+
+    
+
+<br>
+
+### 클로저의 응용
+
+- 코드
+
+  - ```javascript
+    var arr = []
+    for(var i = 0; i < 5; i++){
+        arr[i] = function(){
+            return i;
+        }
+    }
+    for(var index in arr) {
+        console.log(arr[index]());
+    }
+    /*
+    5
+    5
+    5
+    5
+    5
+    */
+    ```
+
+    - 함수가 함수 외부의 컨텍스트에 접근할 수 있을 것으로 기대하겠지만 그렇지 않다.
+
+- 위의 코드는 이렇게 변경해야 한다.
+
+  - ```javascript
+    var arr = []
+    for(var i = 0; i < 5; i++){
+        arr[i] = function(id) {
+            return function(){
+                return id;
+            }
+        }(i);
+    }
+    for(var index in arr) {
+        console.log(arr[index]());
+    }
+    /*
+    0
+    1
+    2
+    3
+    4
+    */
+    ```
+
+    
+
+## 데이터 타입
+
+### 원시 데이터 타입 (기본 데이터타입)
+
+- 원시 데이터 타입이란?
+- 카테고리
+  - 숫자
+  - 문자열
+  - Boolean
+  - null
+  - undefined
+
+### 객체 데이터 타입 (참조 데이터 타입)
+
+### 래퍼객체 (wrapper object)
+
+- 원시 데이터 타입을 객체처럼 다룰 수 있도록 하기 위한 객체
+- 숫자: Number
+- 문자열: String
+- 불리언: Boolean
+- null : 래퍼 객체 존재하지 않음
+- undefined: 래퍼 객체 존재하지 않음
+
+
+
