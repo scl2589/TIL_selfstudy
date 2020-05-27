@@ -144,3 +144,74 @@
 
 - 내림차순으로 정렬은 앞에 `-`를 붙인다. 
 
+
+
+
+
+## Counter
+
+### dictionary를 이용한 카운팅
+
+- 아래 코드는 어떤 숫자가 주어졌을 때, 그 숫자가 몇 개 있는지 세어주는 코드입니다. 
+- dictionary에 해당 숫자가 키로 존재한다면 1을 추가해주고, 그렇지 않으면 그 키를 추가하면서, value로 1로 세팅합니다.
+
+- ```python
+  diction = {}
+  for i in nums2:
+      if i not in diction:
+          diction[i] = 1
+      else:
+          diction[i] += 1
+  ```
+
+  
+
+### collections.Counter를 이용한 카운팅
+
+- `from collections import Counter`를 통해 import 합니다.
+
+- ```python
+  from collections import Counter
+  Counter('hello world') # Counter({'l': 3, 'o': 2, 'h': 1, 'e': 1, ' ': 1, 'w': 1, 'r': 1, 'd': 1})
+  ```
+
+
+
+### Counter 메서드
+
+> Counter의 method에는 3가지의 method가 존재합니다.
+
+#### elements()
+
+- 요소를 반복하는 수 만큼, 카운팅 수 만큼 반복해서 출력합니다.
+
+- ```python
+  c = Counter(a=4, b=2, c=0, d=-2)
+  list(c.elements()) # ['a', 'a', 'a', 'a', 'b', 'b']
+  ```
+
+  
+
+#### most_common()
+
+- 요소와 카운팅 수를 key-value pair로 만들어 빈도 수가 높은 pair부터 낮은 pair까지 정렬시켜 리스트를 return 합니다.
+
+- ```python
+  Counter('abracadabra').most_common(3) #[('a', 5), ('r', 2), ('b', 2)]
+  ```
+
+  
+
+#### subtract()
+
+- 요소들을 iterable로 부터 뺍니다.
+
+- ```python
+  c = Counter(a=4, b=2, c=0, d=-2)
+  d = Counter(a=1, b=2, c=3, d=4)
+  c.subtract(d)
+  c #Counter({'a': 3, 'b': 0, 'c': -3, 'd': -6})
+  ```
+
+  
+
