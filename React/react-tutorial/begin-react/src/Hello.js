@@ -1,10 +1,17 @@
 import React from 'react';
 
-// 함수형 컴포넌트
-function Hello() {
-    // jsx (semicolon은 생략 가능)
-    // jsx로 작성한 코드는 Javascritp로 변환이 된다 (babeljs.io에서 확인 가능)
-    return <div>안녕하세요</div>;
+function Hello({color, name}) {
+    // style 바로 다음의 중괄호는 -> JS 값이기에 중괄호로 객체를 감싼다. 
+    // 그 다음 중괄호는 객체를 위한 중괄호이다.
+    return <div style={{
+        color
+    }}>안녕하세요 {name}</div>
 }
+
+
+// 기본값 설정
+Hello.defaultProps = {
+    name: '이름없음'
+};
 
 export default Hello;
