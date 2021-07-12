@@ -1,29 +1,58 @@
 import React, {useState} from 'react';
 
 function InputSample() {
-    const [text, setText] = useState('');
+    // 객체 형태의 state 관리
+    const [inputs, setInputs] = useState({
+        // 각각의 state에 대한 기본값을 설정해준다.
+        name: '',
+        nickname: '',
+    });
 
+    // name과 nickname 값을 쉽게 사용할 수 있도록 비구조화 할당을 통해 추출해준다. 
+    const { name, nickname } = inputs;
 
-    // e는 이벤트 객체를 말한다.
-    // 수정 이벤트가 발생했을 때, 그 이벤트에 대한 내용이 이벤트 객체, parameter로 받아와서 사용할 수 있다. 
     const onChange = (e) => {
-         // e.target은 현재 input, 이벤트가 발생한 DOM 에 대한 정보를 가지고 있다. 
-        // console.log(e.target.value);
+        const { name, value } = e.target;
 
-        setText(e.target.value);
+        setInputs({ 
+            // 기존의 name과 nickname이 현재상태의 자리로 온다. -> 기존의 객체를 복사해온다. 
+            ...inputs,
+            // 특정 값을 덮어 씌운다. -> 대괄호로 감싸면 실제 name 값이 무엇을 가리키고 있는지에 따라 다른 key 값이 변경된다. 
+            // 예를 들어 name이 name이면 name이 바뀌는거고, name이 nickname이면 nickname 값이 변경된다.
+    
+            [name]: value
+        })
+
+        // nextInputs[name] = value;
+        // setInputs(value);
     }
 
     const onReset = () => {
-        setText('');
+        setInputs({
+            name: '',
+            nickname: '',
+        });
     }
 
     return (
         <div>
-            <input onChange={onChange} value={text}/>
+            {/* 코드의 가독성을 위해 여러 줄에 걸쳐 태그를 작성한다 */}
+            <input 
+                name="name" 
+                placeholder="이름" 
+                onChange={onChange} 
+                value={name}
+            />
+            <input 
+                name="nickname" 
+                placeholder="닉네임" 
+                onChange={onChange} 
+                value={nickname}
+            />
             <button onClick={onReset}>초기화</button>
             <div>
                 <b>값: </b>
-                {text}
+                {name}({nickname})
             </div>
         </div>
     )
