@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 
 function InputSample() {
     // 객체 형태의 state 관리
@@ -7,6 +7,9 @@ function InputSample() {
         name: '',
         nickname: '',
     });
+
+    // ref를 사용하기 위해 useRef()를 설정한다.
+    const nameInput = useRef();
 
     // name과 nickname 값을 쉽게 사용할 수 있도록 비구조화 할당을 통해 추출해준다. 
     const { name, nickname } = inputs;
@@ -19,7 +22,6 @@ function InputSample() {
             ...inputs,
             // 특정 값을 덮어 씌운다. -> 대괄호로 감싸면 실제 name 값이 무엇을 가리키고 있는지에 따라 다른 key 값이 변경된다. 
             // 예를 들어 name이 name이면 name이 바뀌는거고, name이 nickname이면 nickname 값이 변경된다.
-    
             [name]: value
         })
 
@@ -32,6 +34,8 @@ function InputSample() {
             name: '',
             nickname: '',
         });
+        // ref를 활용해 초기화를 눌렀을 때 name input에 focus를 이동한다.
+        nameInput.current.focus();
     }
 
     return (
@@ -42,6 +46,7 @@ function InputSample() {
                 placeholder="이름" 
                 onChange={onChange} 
                 value={name}
+                ref={nameInput}
             />
             <input 
                 name="nickname" 
