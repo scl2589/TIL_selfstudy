@@ -10,6 +10,7 @@ function App() {
   })
 
   const {username, email} = inputs;
+  
   const onChange = e => {
     const { name, value } = e.target;
     setInputs({
@@ -59,6 +60,13 @@ function App() {
     nextId.current += 1; 
   }
 
+  const onRemove = id => {
+    // filter를 걸어서 각 user 객체를 확인해본다.
+    // parameter로 받아온 id를 비교하고, 만약 만족하는 경우 새로운 배열을 만들어서, 배열에 넣고. 
+    // 만족하지 않는 경우, 새로운 배열에 넣지 않는다. 
+    setUsers(users.filter(user => user.id !== id));
+  }
+
   return (
     <>
       <CreateUser 
@@ -67,7 +75,7 @@ function App() {
         onChange={onChange} 
         onCreate={onCreate}
       />
-      <UserList users={users}/>
+      <UserList users={users} onRemove={onRemove}/>
     </>
   );
 }
