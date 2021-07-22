@@ -72,7 +72,7 @@ function App() {
 
   const onToggle = id => {
     setUsers(users.map(
-      user => user.id == id
+      user => user.id === id
       ? { ...user, active: !user.active }
       : user 
     ));

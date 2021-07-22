@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function User({ user, onRemove, onToggle }) {
-    // return (
-    //     <div>
-    //         <b>{user.username}</b><span> ({user.email})</span>
-    //         <button onClick={ () => onRemove(user.id)}>삭제</button>
-    //     </div>
-    // )
-
-    // 위처럼 매번 user. 으로 코드를 쓰는게 귀찮다면 미리 추출을 해주는 방법이 있다. 
     const {username, email, id, active} = user;
+    useEffect(() => {
+        console.log('User 값이 설정됨')
+        console.log(user);
+        return () => {
+            console.log('user 값이 바뀌기 전'); 
+            console.log(user); 
+        }
+    }, [user]); // user를 dependency 배열에 넣으면, 이 값이 설정(mount될 때도 포함)되거나 바뀔때마다 호출이 된다.
     return (
         <div>
             <b 
