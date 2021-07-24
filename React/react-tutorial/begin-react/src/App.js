@@ -56,7 +56,7 @@ function App() {
     };
 
     // setUsers([...users, user]) // spread 연산자를 사용하고, 새로운 user를 넣어주는 방법
-    setUsers(users.concat(user)); // concat을 사용해 기존 users 배열에 새로운 user를 합친다. 
+    setUsers(users => users.concat(user)); // concat을 사용해 기존 users 배열에 새로운 user를 합친다. 
 
     setInputs({
       username: '',
@@ -67,24 +67,24 @@ function App() {
     
     // 값을 바꾸고 싶을 때는?? - oncreate 함수를 실행할 때 마다 nextId를 사용한다. 
     nextId.current += 1; 
-  }, [username, email, users]);
+  }, [username, email]);
 
   const onRemove = useCallback(id => {
     // filter를 걸어서 각 user 객체를 확인해본다.
     // parameter로 받아온 id를 비교하고, 만약 만족하는 경우 새로운 배열을 만들어서, 배열에 넣고. 
     // 만족하지 않는 경우, 새로운 배열에 넣지 않는다. 
-    setUsers(users.filter(user => user.id !== id));
-  }, [users]);
+    setUsers(users => users.filter(user => user.id !== id));
+  }, []);
 
   const onToggle = useCallback(id => {
-    setUsers(users.map(
+    setUsers(users => users.map(
       user => user.id === id
       ? { ...user, active: !user.active }
       : user 
     ));
-  }, [users]);
+  }, []);
 
-  const count = useMemo(() =>countActiveUsers(users));
+  const count = useMemo(() => countActiveUsers(users));
 
   return (
     <>
