@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
+
+function reducer(state, action) {
+    switch (action.type) {
+        case 'INCREMENT':
+            return state + 1;
+        case 'DECREMENT': 
+            return state - 1;
+        default: 
+            throw new Error('Unhandled action');
+    }
+}
 
 function Counter() {
-    // number라는 상태를 만드는데, 이 상태의 기본 값을 0으로 하겠다라는 의미이다.
-    // setNumber는 number 상태를 바꿔주는 함수이다. 
-    const [number, setNumber] = useState(0);
+    const [number, dispatch] = useReducer(reducer, 0); //첫번째는 함수, 두번째 parameter는 초기값
 
     const onIncrease = () => {
-        // console.log('+1');
-        // setNumber(number + 1);
-
-        // 기존의 값을 가져와서, 어떻게 바꿀지 정의할 수 있다.
-        setNumber(prevNumber => prevNumber + 1);
+        dispatch({
+            type: 'INCREMENT'
+        })
     }
 
     const onDecrease = () => {
-        // console.log('-1');
-        setNumber(number - 1);
+        dispatch({
+            type: 'DECREMENT'
+        })
     }
 
     return (
