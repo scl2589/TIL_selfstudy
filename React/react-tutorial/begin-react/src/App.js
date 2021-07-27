@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback, useReducer } from 'react';
+import React, { useMemo, useCallback, useReducer } from 'react';
 import UserList from './UserList'
 import CreateUser from './CreateUser';
 import './App.css';
@@ -66,7 +66,6 @@ function reducer(state, action) {
       default: 
         throw new Error('Unhandled action');
   }
-  return state;
 }
 
 function App() {
