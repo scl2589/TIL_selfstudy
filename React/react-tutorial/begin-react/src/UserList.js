@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { UserDispatch } from './App';
 
-const User = React.memo(function User({ user, onRemove, onToggle }) {
+const User = React.memo(function User({ user }) {
     const {username, email, id, active} = user;
+    const dispatch = useContext(UserDispatch);
     useEffect(() => {
         console.log('User 값이 설정됨')
         console.log(user);
@@ -17,7 +19,10 @@ const User = React.memo(function User({ user, onRemove, onToggle }) {
                     color: active ? 'green' : 'black',
                     cursor: 'pointer'
                 }}
-                onClick={() => onToggle(id)}
+                onClick={() => dispatch({
+                    type: 'TOGGLE_USER',
+                    id
+                })}
             >
                 {username}
             </b>
@@ -25,14 +30,17 @@ const User = React.memo(function User({ user, onRemove, onToggle }) {
             <span> ({email})
             </span>
             {/* onClick에서 새로운 함수를 호출 하는 이유. 클릭했을 때 onRemove 함수를 호출 할 것이라는 것을 의미한다. */}
-            <button onClick={ () => onRemove(id)}>삭제</button>
+            <button onClick={ () => dispatch({
+                type: 'REMOVE_USER',
+                id
+            })}>삭제</button>
             {/* 아래 처럼 작성하면 컴포넌트가 불러와질 때 onRemove 함수가 바로 호출된다. */}
             {/* <button onClick={onRemove(id)}>삭제</button> */}
         </div>
     )
 });
 
-function UserList({users, onRemove, onToggle}) {
+function UserList({users}) {
     return (
         <div>
             {
@@ -42,8 +50,6 @@ function UserList({users, onRemove, onToggle}) {
                         <User 
                             user={user} 
                             key={user.id}
-                            onRemove={onRemove}
-                            onToggle={onToggle}
                         />
                     )
                 )
