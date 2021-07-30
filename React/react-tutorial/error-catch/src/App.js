@@ -1,5 +1,6 @@
 import './App.css';
 import User from './User'
+import ErrorBoundary from './ErrorBoundary'
 
 function App() {
   const user = {
@@ -9,7 +10,7 @@ function App() {
   return (
     <ErrorBoundary>
       <User />
-  </ErrorBoundary>
+    </ErrorBoundary>
 );
 }
 
