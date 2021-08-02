@@ -11,6 +11,16 @@ $pink: #f06595;
   &:active {
     background: darken($color, 10%);
   }
+
+  &.outline {
+    color: $color;
+    background: none;
+    border: 1px solid $color;
+    &:hover {
+      background: $color;
+      color: white;
+    }
+  }
 }
 
 .Button {
@@ -60,5 +70,14 @@ $pink: #f06595;
   // 버튼들 사이에 여백을 넣는 방법
   & + & {
     margin-left: 1rem;
+  }
+
+  &.fullWidth {
+    width: 100%;
+    justify-content: center;
+    & + & {
+      margin-left: 0;
+      margin-top: 1rem;
+    }
   }
 }
