@@ -1,4 +1,17 @@
 $blue: #228be6; // 주석!
+$gray: #495057;
+$pink: #f06595;
+
+@mixin button-color($color) {
+  background: $color;
+  &:hover {
+    background: lighten($color, 10%);
+  }
+
+  &:active {
+    background: darken($color, 10%);
+  }
+}
 
 .Button {
   display: inline-flex;
@@ -33,13 +46,15 @@ $blue: #228be6; // 주석!
     font-size: 0.875rem;
   }
 
-  background: $blue;
-  &:hover {
-    background: lighten($blue, 10%);
+  &.blue {
+    @include button-color($blue);
+  }
+  &.gray {
+    @include button-color($gray);
   }
 
-  &:active {
-    background: darken($blue, 10%);
+  &.pink {
+    @include button-color($pink);
   }
 
   // 버튼들 사이에 여백을 넣는 방법
