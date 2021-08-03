@@ -1,6 +1,44 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled, { keyframes, css } from 'styled-components';
 import Button from './Button';
+
+const fadeIn = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`
+
+const fadeOut = keyframes`
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+`
+
+const slideUp = keyframes`
+    from {
+        transform: translateY(200px);
+    }
+    to {
+        transform: translateY(0px);
+    }
+`
+
+const slideDown = keyframes`
+    from {
+        transform: translateY(0px); 
+    }
+    to {
+        transform: translateY(200px);
+    }
+`
+
+
 
 const DarkBackground = styled.div`
     position: fixed;
@@ -12,6 +50,16 @@ const DarkBackground = styled.div`
     align-items: center; 
     justify-content: center;
     background: rgba(0, 0, 0, 0.8);
+
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+    animation-name: ${fadeIn};
+    /* 애니메이션이 끝나고 어떻게 할지 정한다. */
+    animation-fill-mode: forwards; 
+
+    ${props => props.disappear && css`
+        animation-name: ${fadeOut};
+    `}
 `
 
 const DialogBlock = styled.div`
@@ -27,6 +75,15 @@ const DialogBlock = styled.div`
     p {
         font-size: 1.125rem;
     }
+
+    animation-duration: 0.25s;
+    animation-timing-function: ease-out;
+    animation-name: ${slideUp};
+    animation-fill-mode: forwards;
+
+    ${props => props.disappear && css`
+        animation-name: ${slideDown};
+    `}
 `
 
 const ButtonGroup = styled.div`
@@ -50,23 +107,38 @@ function Dialog({
     onConfirm,
     onCancel
 }){
-    if (!visible) return null;
-  return (
-    <DarkBackground>
-        <DialogBlock>
-            <h3>{title}</h3>
-            <p>{children}</p>
-            <ButtonGroup>
-                <ShortMarginButton color="gray" onClick={onCancel}>
-                    {cancelText}
-                </ShortMarginButton>
-                <ShortMarginButton color="pink" onClick={onConfirm}>
-                    {confirmText}
-                </ShortMarginButton>
-            </ButtonGroup>
-        </DialogBlock>
-    </DarkBackground>
-  )
+    const [animate, setAnimate] = useState(false);
+    const [localVisible, setLocalVisible] = useState(visible);
+
+    useEffect(() => {
+        //visible true -> false
+        if (localVisible && !visible) {
+            setAnimate(true);
+            setTimeout(() => setAnimate(false), 250);
+        }
+
+        setLocalVisible(visible); // visible 값이 바뀔 때마다, localVisible 값을 동기화시켜주겠다는 뜻
+    }, [localVisible, visible])
+
+
+    if (!localVisible && !animate) return null;
+
+    return (
+        <DarkBackground disappear={!visible}>
+            <DialogBlock  disappear={!visible}>
+                <h3>{title}</h3>
+                <p>{children}</p>
+                <ButtonGroup>
+                    <ShortMarginButton color="gray" onClick={onCancel}>
+                        {cancelText}
+                    </ShortMarginButton>
+                    <ShortMarginButton color="pink" onClick={onConfirm}>
+                        {confirmText}
+                    </ShortMarginButton>
+                </ButtonGroup>
+            </DialogBlock>
+        </DarkBackground>
+    )
 }
 
 Dialog.defaultProps = {
