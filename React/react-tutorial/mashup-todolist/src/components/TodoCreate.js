@@ -64,7 +64,7 @@ const Input = styled.input`
     padding: 12px;
     border-radius: 4px;
     border: 1px solid #d33296;
-    width: 100%auto;
+    width: 100%;
     outline: none;
     font-size: 18px;
     box-sizing: border-box; 
@@ -74,7 +74,6 @@ const Input = styled.input`
 function TodoCreate(){
     const [open, setOpen] = useState(false);
     const onToggle = () => setOpen(!open);
-
 
     return(
         <>
