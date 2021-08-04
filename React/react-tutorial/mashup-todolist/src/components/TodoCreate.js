@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components'
 import { MdAdd } from 'react-icons/md'
+import { useTodoNextId, useTodoDispatch } from '../TodoContext';
 
 const CircleButton = styled.button`
     background: #38d9a9;
@@ -51,7 +52,7 @@ const InsertFormPositioner = styled.div`
     position: absolute;
 `
 
-const InsertForm = styled.div`
+const InsertForm = styled.form`
     background: #f8f9fa;
     padding: 32px;
     padding-bottom: 72px;
@@ -73,16 +74,43 @@ const Input = styled.input`
 
 function TodoCreate(){
     const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('');
+    const dispatch = useTodoDispatch(); 
+    const nextId = useTodoNextId();
+
     const onToggle = () => setOpen(!open);
+    const onChange = (e) => setValue(e.target.value);
+    const onSubmit = e => {
+        e.preventDefault(); // 원래 브라우저에서 하는 행동을 방지한다. (새로고침을 방지한다)
+        dispatch({
+            type: 'CREATE',
+            todo: {
+                id: nextId.current,
+                text: value,
+                done: false,
+            }
+        })
+        setValue('');
+        setOpen(false);
+        nextId.current += 1;
+    }
+
+
 
     return(
         <>
-            {open && 
+            {open && (
             <InsertFormPositioner>
-                <InsertForm>
-                    <Input placeholder="할 일을 입력 후, Enter키를 누른다" autofocus />
+                <InsertForm onSubmit={onSubmit}>
+                    <Input 
+                        placeholder="할 일을 입력 후, Enter키를 누른다" 
+                        autoFocus 
+                        onChange={onChange} 
+                        value={value}
+                    />
                 </InsertForm>
-            </InsertFormPositioner>}
+            </InsertFormPositioner>
+            )}
             <CircleButton open={open} onClick={onToggle}>
                 <MdAdd />
             </CircleButton>
@@ -90,4 +118,4 @@ function TodoCreate(){
   );
 }
 
-export default TodoCreate;
+export default React.memo(TodoCreate);
